@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 
 
 def allowed_time():
-    timezone = pytz.timezone("Europe/Prague")
-    now = datetime.now(timezone)
+    tz = pytz.timezone("Europe/Prague")
+    now = datetime.now(tz)
 
     return 12 <= now.hour < 24
 
@@ -33,27 +33,22 @@ BATTLE_TRANSLATIONS = {
     "Skirmishes and Battles for Stronghold": "Střety a bitvy o pevnost"
 }
 
+
 LANGUAGE = "cs"
 
-MESSAGES = {
-        "en": {
-            "active": "🚨 **CLAN RESERVE ACTIVE** 🚨",
-            "level": "Level",
-            "bonus": "**Bonus:**",
-            "duration": "⏳ Duration:",
-            "ends": "🕒 Ends:",
-            "footer": "Happy farming, commanders! 🫡"
-        },
 
-        "cs": {
-            "active": "🚨 **Zálohy běží!** 🚨",
-            "level": "Úroveň",
-            "bonus": "**Bonus:**",
-            "duration": "⏳ Doba trvání:",
-            "ends": "🕒 Končí:",
-            "footer": ""
-        }
+MESSAGES = {
+    "cs": {
+        "active": "🚨 **Zálohy běží!** 🚨",
+        "ends": "🕒 Končí:"
+    },
+
+    "en": {
+        "active": "🚨 **CLAN RESERVE ACTIVE** 🚨",
+        "ends": "🕒 Ends:"
     }
+}
+
 
 STATE_FILE = "reserve_state.json"
 
@@ -62,59 +57,69 @@ API_URL = "https://api.worldoftanks.eu/wot/stronghold/clanreserves/"
 
 def load_state():
     if os.path.exists(STATE_FILE):
-            with open(STATE_FILE, "r") as f:
-                return json.load(f)
-        return {}
+        with open(STATE_FILE, "r") as f:
+            return json.load(f)
+
+    return {}
 
 
 def save_state(state):
-        with open(STATE_FILE, "w") as f:
-            json.dump(state, f, indent=2)
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
 
 
 def get_reserves():
-        params = {
-            "application_id": WG_APP_ID,
-            "access_token": WG_TOKEN,
-            "clan_id": CLAN_ID
-        }
 
-        response = requests.get(API_URL, params=params)
-        response.raise_for_status()
+    params = {
+        "application_id": WG_APP_ID,
+        "access_token": WG_TOKEN,
+        "clan_id": CLAN_ID
+    }
 
-        data = response.json()
+    response = requests.get(API_URL, params=params)
+    response.raise_for_status()
 
-        if data.get("status") != "ok":
-            raise Exception(data)
+    data = response.json()
 
-        return data["data"]
+    if data.get("status") != "ok":
+        raise Exception(data)
+
+    return data["data"]
+
 
 def send_discord(message):
+
     payload = {
         "content": message
     }
 
-    r = requests.post(
+    response = requests.post(
         DISCORD_WEBHOOK,
         json=payload
     )
 
-    r.raise_for_status()
+    response.raise_for_status()
 
 
 def reserve_icon(name):
+
     if "Battle Payments" in name:
         return "💰"
+
     if "Briefing" in name:
         return "👨‍✈️"
+
     if "Training" in name:
         return "⭐"
+
     if "Maneuvers" in name:
         return "📚"
+
     return "🎁"
 
 
 def format_time(timestamp):
+
     tz = pytz.timezone("Europe/Prague")
 
     dt = datetime.fromtimestamp(
@@ -127,18 +132,20 @@ def format_time(timestamp):
 
 def main():
 
-    messages = []
-
     if not allowed_time():
         print("Outside Czech reserve hours. Exiting.")
         return
 
+
     old_state = load_state()
     new_state = {}
 
+    messages = []
+
     reserves = get_reserves()
-    
-        for reserve in reserves:
+
+
+    for reserve in reserves:
 
         for item in reserve.get("in_stock", []):
 
@@ -154,25 +161,35 @@ def main():
 
                 new_state[reserve_id] = activation
 
-                # Testing mode
+
+                # TEST MODE
+                # Change back later:
+                # if old_state.get(reserve_id) != activation:
+
                 if True:
 
-                    msg = MESSAGES[LANGUAGE]
-
                     message = (
-                        f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-                        f"🕒 Končí: {format_time(item['active_till'])}"
+                        f"{reserve_icon(reserve['name'])} "
+                        f"**{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                        f"{MESSAGES[LANGUAGE]['ends']} "
+                        f"{format_time(item['active_till'])}"
                     )
 
                     messages.append(message)
 
+
     if messages:
-        send_discord(
-            f"{msg['active']}\n\n" +
-            "\n\n".join(messages)
+
+        final_message = (
+            f"{MESSAGES[LANGUAGE]['active']}\n\n"
+            + "\n\n".join(messages)
         )
 
+        send_discord(final_message)
+
+
     save_state(new_state)
+
 
 
 if __name__ == "__main__":

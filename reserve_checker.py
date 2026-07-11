@@ -121,7 +121,8 @@ def format_time(timestamp):
 
     return dt.strftime("%H:%M %Z")
 
-    def main():
+
+def main():
         
         messages = []
         if not allowed_time():
@@ -153,25 +154,20 @@ def format_time(timestamp):
                     #if old_state.get(reserve_id) != activation:
                     if True:
 
-                        bonus_text = ""
-
-                        for bonus in item.get("bonus_values", []):
-                            bonus_text += (
-                                f"• {BATTLE_TRANSLATIONS.get(bonus['battle_type'], bonus['battle_type'])}: "
-                                f"+{int(bonus['value']*100)}%\n"
-                            )
-
                         msg = MESSAGES[LANGUAGE]
 
-                            mmessage = (
-    f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-    f"🕒 Končí: {format_time(item['active_till'])}"
-)
+                        message = (
+                            f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                            f"🕒 Končí: {format_time(item['active_till'])}"
+                        )
 
-                    messages.append(message)
+                        messages.append(message)
 
-    if messages:
-        send_discord("\n\n".join(messages))
+                    if messages:
+                        send_discord(
+                            f"{msg['active']}\n\n" +
+                            "\n\n".join(messages)
+                        )
 
     save_state(new_state)
 

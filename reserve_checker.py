@@ -161,7 +161,7 @@ def main():
                             f"🕒 Končí: {format_time(item['active_till'])}"
                         )
 
-                                            messages.append(message)
+       messages.append(message)
 
     if messages:
         send_discord(

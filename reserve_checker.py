@@ -26,16 +26,16 @@ RESERVE_TRANSLATIONS = {
 }
 
 
-    BATTLE_TRANSLATIONS = {
-        "All Battles": "Všechny bitvy",
-        "Random Battles": "Náhodné bitvy",
-        "Clan Battles and Tournaments": "Klanové bitvy a turnaje",
-        "Skirmishes and Battles for Stronghold": "Střety a bitvy o pevnost"
-    }
+BATTLE_TRANSLATIONS = {
+    "All Battles": "Všechny bitvy",
+    "Random Battles": "Náhodné bitvy",
+    "Clan Battles and Tournaments": "Klanové bitvy a turnaje",
+    "Skirmishes and Battles for Stronghold": "Střety a bitvy o pevnost"
+}
 
-    LANGUAGE = "cs"
+LANGUAGE = "cs"
 
-    MESSAGES = {
+MESSAGES = {
         "en": {
             "active": "🚨 **CLAN RESERVE ACTIVE** 🚨",
             "level": "Level",
@@ -55,24 +55,24 @@ RESERVE_TRANSLATIONS = {
         }
     }
 
-    STATE_FILE = "reserve_state.json"
+STATE_FILE = "reserve_state.json"
 
-    API_URL = "https://api.worldoftanks.eu/wot/stronghold/clanreserves/"
+API_URL = "https://api.worldoftanks.eu/wot/stronghold/clanreserves/"
 
 
-    def load_state():
-        if os.path.exists(STATE_FILE):
+def load_state():
+    if os.path.exists(STATE_FILE):
             with open(STATE_FILE, "r") as f:
                 return json.load(f)
         return {}
 
 
-    def save_state(state):
+def save_state(state):
         with open(STATE_FILE, "w") as f:
             json.dump(state, f, indent=2)
 
 
-    def get_reserves():
+def get_reserves():
         params = {
             "application_id": WG_APP_ID,
             "access_token": WG_TOKEN,
@@ -128,43 +128,44 @@ def format_time(timestamp):
 def main():
 
     messages = []
-        if not allowed_time():
-            print("Outside Czech reserve hours. Exiting.")
-            return
 
-        old_state = load_state()
-        new_state = {}
+    if not allowed_time():
+        print("Outside Czech reserve hours. Exiting.")
+        return
 
-        reserves = get_reserves()
+    old_state = load_state()
+    new_state = {}
 
+    reserves = get_reserves()
+    
         for reserve in reserves:
 
-            for item in reserve.get("in_stock", []):
+        for item in reserve.get("in_stock", []):
 
-                if item.get("status") == "active":
+            if item.get("status") == "active":
 
-                    reserve_id = (
-                        reserve["type"]
-                        + "_"
-                        + str(item["level"])
+                reserve_id = (
+                    reserve["type"]
+                    + "_"
+                    + str(item["level"])
+                )
+
+                activation = item.get("activated_at")
+
+                new_state[reserve_id] = activation
+
+                # Testing mode
+                if True:
+
+                    msg = MESSAGES[LANGUAGE]
+
+                    message = (
+                        f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                        f"🕒 Končí: {format_time(item['active_till'])}"
                     )
 
-                    activation = item.get("activated_at")
+                    messages.append(message)
 
-                    new_state[reserve_id] = activation
-
-                    # New activation detected
-                    #if old_state.get(reserve_id) != activation:
-                    if True:
-
-                        msg = MESSAGES[LANGUAGE]
-
-                        message = (
-                            f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-                            f"🕒 Končí: {format_time(item['active_till'])}"
-                        )
-
-                        messages.append(message)
     if messages:
         send_discord(
             f"{msg['active']}\n\n" +

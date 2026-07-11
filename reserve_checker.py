@@ -28,7 +28,7 @@ MESSAGES = {
     },
 
     "cs": {
-        "active": "🚨 **AKTIVNÍ KLANOVÁ REZERVA** 🚨",
+        "active": "🚨 **Zálohy běží!** 🚨",
         "level": "Úroveň",
         "bonus": "**Bonus:**",
         "duration": "⏳ Doba trvání:",

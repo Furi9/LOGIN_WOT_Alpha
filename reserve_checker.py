@@ -4,23 +4,26 @@ import requests
 import pytz
 from datetime import datetime, timezone
 
+
 def allowed_time():
-   timezone = pytz.timezone("Europe/Prague")
-   now = datetime.now(timezone)
+    timezone = pytz.timezone("Europe/Prague")
+    now = datetime.now(timezone)
 
     return 12 <= now.hour < 24
 
-    WG_APP_ID = os.environ["WG_APP_ID"]
-    WG_TOKEN = os.environ["WG_TOKEN"]
-    CLAN_ID = os.environ["CLAN_ID"]
-    DISCORD_WEBHOOK = os.environ["DISCORD_WEBHOOK"]
 
-    RESERVE_TRANSLATIONS = {
-        "Battle Payments": "Kredity",
-        "Additional Briefing": "Zkušenosti posádky",
-        "Tactical Training": "Bojové zkušenosti",
-        "Military Maneuvers": "Volné zkušenosti",
-    }
+WG_APP_ID = os.environ["WG_APP_ID"]
+WG_TOKEN = os.environ["WG_TOKEN"]
+CLAN_ID = os.environ["CLAN_ID"]
+DISCORD_WEBHOOK = os.environ["DISCORD_WEBHOOK"]
+
+
+RESERVE_TRANSLATIONS = {
+    "Battle Payments": "Kredity",
+    "Additional Briefing": "Zkušenosti posádky",
+    "Tactical Training": "Bojové zkušenosti",
+    "Military Maneuvers": "Volné zkušenosti",
+}
 
 
     BATTLE_TRANSLATIONS = {
@@ -123,8 +126,8 @@ def format_time(timestamp):
 
 
 def main():
-        
-        messages = []
+
+    messages = []
         if not allowed_time():
             print("Outside Czech reserve hours. Exiting.")
             return
@@ -161,8 +164,7 @@ def main():
                             f"🕒 Končí: {format_time(item['active_till'])}"
                         )
 
-       messages.append(message)
-
+                        messages.append(message)
     if messages:
         send_discord(
             f"{msg['active']}\n\n" +

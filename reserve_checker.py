@@ -163,18 +163,10 @@ def format_time(timestamp):
 
                         msg = MESSAGES[LANGUAGE]
 
-                            message = (
-                        f"{msg['active']}\n\n"
-                        f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-                        f"{msg['level']} {item['level']}\n\n"
-                        f"{msg['bonus']}\n"
-                        f"{bonus_text}"
-                        f"{msg['duration']} "
-                        f"{item['action_time']//3600} hodin\n"
-                        f"{msg['ends']} "
-                        f"{format_time(item['active_till'])}\n\n"
-                        f"{msg['footer']}"
-                    )
+                            mmessage = (
+    f"{reserve_icon(reserve['name'])} **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+    f"🕒 Končí: {format_time(item['active_till'])}"
+)
 
                     messages.append(message)
 

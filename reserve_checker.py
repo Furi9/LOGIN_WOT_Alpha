@@ -2,13 +2,13 @@ import os
 import json
 import requests
 import pytz
-    from datetime import datetime, timezone
+from datetime import datetime, timezone
 
-    def allowed_time():
-        timezone = pytz.timezone("Europe/Prague")
-        now = datetime.now(timezone)
+def allowed_time():
+   timezone = pytz.timezone("Europe/Prague")
+   now = datetime.now(timezone)
 
-        return 12 <= now.hour < 24
+    return 12 <= now.hour < 24
 
     WG_APP_ID = os.environ["WG_APP_ID"]
     WG_TOKEN = os.environ["WG_TOKEN"]

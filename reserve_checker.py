@@ -1,7 +1,7 @@
 import os
 import json
-    import requests
-    import pytz
+import requests
+import pytz
     from datetime import datetime, timezone
 
     def allowed_time():

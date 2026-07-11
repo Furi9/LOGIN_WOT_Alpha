@@ -1,5 +1,5 @@
-    import os
-    import json
+import os
+import json
     import requests
     import pytz
     from datetime import datetime, timezone
@@ -161,16 +161,16 @@ def main():
                             f"🕒 Končí: {format_time(item['active_till'])}"
                         )
 
-                        messages.append(message)
+                                            messages.append(message)
 
-                    if messages:
-                        send_discord(
-                            f"{msg['active']}\n\n" +
-                            "\n\n".join(messages)
-                        )
+    if messages:
+        send_discord(
+            f"{msg['active']}\n\n" +
+            "\n\n".join(messages)
+        )
 
     save_state(new_state)
 
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()

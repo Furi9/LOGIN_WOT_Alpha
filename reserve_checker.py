@@ -129,56 +129,32 @@ def format_time(timestamp):
 
     return dt.strftime("%H:%M %Z")
 
-
 def main():
 
     if not allowed_time():
         print("Outside Czech reserve hours. Exiting.")
         return
 
-
     old_state = load_state()
     new_state = {}
-
     messages = []
 
     reserves = get_reserves()
 
-
-    for reserve in reserves:
-
-        for item in reserve.get("in_stock", []):
-
-            if item.get("status") == "active":
-
-                reserve_id = (
-                    reserve["type"]
-                    + "_"
-                    + str(item["level"])
-                )
-
-                activation = item.get("activated_at")
-
-                new_state[reserve_id] = activation
-
-                #if True; testing shit
-                if old_state.get(reserve_id) != activation:
-
-            
-
-                    message = (
-                        f"{reserve_icon(reserve['name'])} "
-                        f"**{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-                        f"{MESSAGES[LANGUAGE]['ends']} "
-                        f"{format_time(item['active_till'])}"
-                    )
-
-                    messages.append(message)
+    # your loops here...
 
 
-if reserves:
+    if messages:
+
+        final_message = (
+            f"{MESSAGES[LANGUAGE]['active']}\n\n"
+            + "\n\n".join(messages)
+        )
+
+        send_discord(final_message)
+
+
     save_state(new_state)
-
 
 
 if __name__ == "__main__":

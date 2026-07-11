@@ -15,6 +15,21 @@ WG_TOKEN = os.environ["WG_TOKEN"]
 CLAN_ID = os.environ["CLAN_ID"]
 DISCORD_WEBHOOK = os.environ["DISCORD_WEBHOOK"]
 
+RESERVE_TRANSLATIONS = {
+    "Battle Payments": "Kredity",
+    "Additional Briefing": "Zkušenosti posádky",
+    "Tactical Training": "Bojové zkušenosti",
+    "Military Maneuvers": "Volné zkušenosti",
+}
+
+
+BATTLE_TRANSLATIONS = {
+    "All Battles": "Všechny bitvy",
+    "Random Battles": "Náhodné bitvy",
+    "Clan Battles and Tournaments": "Klanové bitvy a turnaje",
+    "Skirmishes and Battles for Stronghold": "Střety a bitvy o pevnost"
+}
+
 LANGUAGE = "cs"
 
 MESSAGES = {
@@ -124,7 +139,8 @@ def main():
                 new_state[reserve_id] = activation
 
                 # New activation detected
-                if old_state.get(reserve_id) != activation:
+                if True:
+                #if old_state.get(reserve_id) != activation:
 
                     bonus_text = ""
 
@@ -138,7 +154,8 @@ def main():
 
                     message = (
                         f"{msg['active']}\n\n"
-                        f"💰 **{reserve['name']}**\n"
+                        f"💰 **{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                        f"• {BATTLE_TRANSLATIONS.get(bonus['battle_type'], bonus['battle_type'])}: "
                         f"{msg['level']} {item['level']}\n\n"
                         f"{msg['bonus']}\n"
                         f"{bonus_text}\n"

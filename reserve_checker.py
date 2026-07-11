@@ -33,7 +33,7 @@ MESSAGES = {
         "bonus": "**Bonus:**",
         "duration": "⏳ Doba trvání:",
         "ends": "🕒 Končí:",
-        "footer": "Hodně štěstí v bitvách, velitelé! 🫡"
+        "footer": ""
     }
 }
 

@@ -139,16 +139,16 @@ def main():
                 new_state[reserve_id] = activation
 
                 # New activation detected
-                if True:
                 #if old_state.get(reserve_id) != activation:
+                if True:
 
-                           bonus_text = ""
+                    bonus_text = ""
 
-                        for bonus in item.get("bonus_values", []):
-                            bonus_text += (
-                                f"• {BATTLE_TRANSLATIONS.get(bonus['battle_type'], bonus['battle_type'])}: "
-                                f"+{int(bonus['value']*100)}%\n"
-                            )
+                    for bonus in item.get("bonus_values", []):
+                        bonus_text += (
+                            f"• {BATTLE_TRANSLATIONS.get(bonus['battle_type'], bonus['battle_type'])}: "
+                            f"+{int(bonus['value']*100)}%\n"
+                        )
 
                     msg = MESSAGES[LANGUAGE]
 

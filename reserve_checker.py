@@ -9,7 +9,7 @@ def allowed_time():
     tz = pytz.timezone("Europe/Prague")
     now = datetime.now(tz)
 
-    return 12 <= now.hour < 24
+    return 15 <= now.hour <= 23
 
 
 WG_APP_ID = os.environ["WG_APP_ID"]
@@ -176,16 +176,7 @@ def main():
                     messages.append(message)
 
 
-    if messages:
-
-        final_message = (
-            f"{MESSAGES[LANGUAGE]['active']}\n\n"
-            + "\n\n".join(messages)
-        )
-
-        send_discord(final_message)
-
-
+if reserves:
     save_state(new_state)
 
 

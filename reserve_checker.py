@@ -161,12 +161,10 @@ def main():
 
                 new_state[reserve_id] = activation
 
+                #if True; testing shit
+                if old_state.get(reserve_id) != activation:
 
-                # TEST MODE
-                # Change back later:
-                # if old_state.get(reserve_id) != activation:
-
-                if True:
+            
 
                     message = (
                         f"{reserve_icon(reserve['name'])} "

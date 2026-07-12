@@ -167,15 +167,15 @@ def main():
                     messages.append(message)
 
 
-    if messages:
-        final_message = (
-            f"{MESSAGES[LANGUAGE]['active']}\n\n"
-            + "\n\n".join(messages)
-        )
+save_state(new_state)
 
-        send_discord(final_message)
+if messages:
+    final_message = (
+        f"{MESSAGES[LANGUAGE]['active']}\n\n"
+        + "\n\n".join(messages)
+    )
 
-    save_state(new_state)
+    send_discord(final_message)
 
 import time
 
@@ -188,4 +188,4 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error:", e)
 
-        time.sleep(120)
+        time.sleep(300)

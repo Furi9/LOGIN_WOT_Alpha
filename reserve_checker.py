@@ -128,7 +128,6 @@ def format_time(timestamp):
     ).astimezone(tz)
 
     return dt.strftime("%H:%M %Z")
-
 def main():
 
     if not allowed_time():
@@ -140,31 +139,32 @@ def main():
     messages = []
 
     reserves = get_reserves()
-for reserve in reserves:
-    for item in reserve.get("in_stock", []):
 
-        if item.get("status") == "active":
+    for reserve in reserves:
 
-            reserve_id = (
-                reserve["type"]
-                + "_"
-                + str(item["level"])
-            )
+        for item in reserve.get("in_stock", []):
 
-            activation = item.get("activated_at")
-            new_state[reserve_id] = activation
+            if item.get("status") == "active":
 
-            if old_state.get(reserve_id) != activation:
-
-                message = (
-                    f"{reserve_icon(reserve['name'])} "
-                    f"**{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
-                    f"{MESSAGES[LANGUAGE]['ends']} "
-                    f"{format_time(item['active_till'])}"
+                reserve_id = (
+                    reserve["type"]
+                    + "_"
+                    + str(item["level"])
                 )
 
-                messages.append(message)
+                activation = item.get("activated_at")
+                new_state[reserve_id] = activation
 
+                if old_state.get(reserve_id) != activation:
+
+                    message = (
+                        f"{reserve_icon(reserve['name'])} "
+                        f"**{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                        f"{MESSAGES[LANGUAGE]['ends']} "
+                        f"{format_time(item['active_till'])}"
+                    )
+
+                    messages.append(message)
 
     if messages:
 
@@ -174,7 +174,6 @@ for reserve in reserves:
         )
 
         send_discord(final_message)
-
 
     save_state(new_state)
 

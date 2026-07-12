@@ -140,8 +140,30 @@ def main():
     messages = []
 
     reserves = get_reserves()
+for reserve in reserves:
+    for item in reserve.get("in_stock", []):
 
-    # your loops here...
+        if item.get("status") == "active":
+
+            reserve_id = (
+                reserve["type"]
+                + "_"
+                + str(item["level"])
+            )
+
+            activation = item.get("activated_at")
+            new_state[reserve_id] = activation
+
+            if old_state.get(reserve_id) != activation:
+
+                message = (
+                    f"{reserve_icon(reserve['name'])} "
+                    f"**{RESERVE_TRANSLATIONS.get(reserve['name'], reserve['name'])}**\n"
+                    f"{MESSAGES[LANGUAGE]['ends']} "
+                    f"{format_time(item['active_till'])}"
+                )
+
+                messages.append(message)
 
 
     if messages:
@@ -156,6 +178,15 @@ def main():
 
     save_state(new_state)
 
+import time
 
 if __name__ == "__main__":
-    main()
+    print("WoT Reserve Checker started")
+
+    while True:
+        try:
+            main()
+        except Exception as e:
+            print("Error:", e)
+
+        time.sleep(600)

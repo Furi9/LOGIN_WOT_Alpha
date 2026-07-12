@@ -128,6 +128,7 @@ def format_time(timestamp):
     ).astimezone(tz)
 
     return dt.strftime("%H:%M %Z")
+
 def main():
 
     if not allowed_time():
@@ -166,16 +167,15 @@ def main():
 
                     messages.append(message)
 
+    if messages:
+        final_message = (
+            f"{MESSAGES[LANGUAGE]['active']}\n\n"
+            + "\n\n".join(messages)
+        )
 
-save_state(new_state)
+        send_discord(final_message)
 
-if messages:
-    final_message = (
-        f"{MESSAGES[LANGUAGE]['active']}\n\n"
-        + "\n\n".join(messages)
-    )
-
-    send_discord(final_message)
+    save_state(new_state)
 
 import time
 

@@ -166,8 +166,8 @@ def main():
 
                     messages.append(message)
 
-    if messages:
 
+    if messages:
         final_message = (
             f"{MESSAGES[LANGUAGE]['active']}\n\n"
             + "\n\n".join(messages)
@@ -188,4 +188,4 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error:", e)
 
-        time.sleep(600)
+        time.sleep(120)
